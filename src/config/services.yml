@@ -1,3 +1,11 @@
 services:
     logger:
-        class: %logger.classe%
+        class: service\logger
+
+    definitionContructor:
+        class: service\Chat
+        arguments: [@logger]
+        properties:
+            name: constructor
+        tags:
+            - { name: chat }

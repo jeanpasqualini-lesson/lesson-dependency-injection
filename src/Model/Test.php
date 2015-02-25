@@ -22,4 +22,6 @@ abstract class Test {
     {
         return $this->container;
     }
+
+    abstract public function runTest();
 }

@@ -24,6 +24,19 @@ class ProjectServiceContainer extends Container
      */
     public function __construct()
     {
-        parent::__construct();
+        parent::__construct(new ParameterBag($this->getDefaultParameters()));
+    }
+
+    /**
+     * Gets the default parameters.
+     *
+     * @return array An array of the default parameters
+     */
+    protected function getDefaultParameters()
+    {
+        return array(
+            'logger.class' => 'service\\logger',
+            'chat.class' => 'service\\Chat',
+        );
     }
 }

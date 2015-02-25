@@ -10,6 +10,8 @@ require "../vendor/autoload.php";
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+define("ROOT_DIRECTORY", __DIR__);
+
 spl_autoload_register(function($classname)
 {
    $path = __DIR__.DIRECTORY_SEPARATOR.str_replace("\\", DIRECTORY_SEPARATOR, $classname).".php";
@@ -34,11 +36,13 @@ foreach($tests as $test)
 
     /** @var \Model\Test $test */
 
+    $test->runTest();
+
     $containerTest = $test->getContainer();
 
     foreach($containerTest->findTaggedServiceIds("chat") as $id => $attributes)
     {
-        $container->get($id)->test();
+        $containerTest->get($id)->test();
     }
 }
 

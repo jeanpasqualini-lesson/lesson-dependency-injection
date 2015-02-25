@@ -13,7 +13,7 @@ class YamlContainer extends \Model\Test {
     {
         $container = $this->getContainer();
 
-        $loader = new \Symfony\Component\DependencyInjection\Loader\YamlFileLoader($container, new \Symfony\Component\Config\FileLocator(__DIR__));
+        $loader = new \Symfony\Component\DependencyInjection\Loader\YamlFileLoader($container, new \Symfony\Component\Config\FileLocator(ROOT_DIRECTORY));
 
         $loader->load("config/services.yml");
     }
