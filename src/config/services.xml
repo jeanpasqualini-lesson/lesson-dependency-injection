@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter id="logger.class">service\logger</parameter>
+        <parameter id="chat.class">service\Chat</parameter>
+    </parameters>
+    <services>
+        <service id="logger" class="%logger.class%">
+        </service>
+
+        <!-- defintionConstructor -->
+        <service id="definitionConstructor" class="%chat.class%">
+            <argument type="service" id="logger"/>
+            <tag name="chat"></tag>
+            <property name="name" type="string">constructor</property>
+        </service>
+
+        <!-- definitionSetter -->
+        <service id="definitionSetter" class="%chat.class%">
+            <property name="name" type="string">setter</property>
+            <call method="setLogger">
+                <argument type="service" id="logger"></argument>
+            </call>
+            <tag name="chat"></tag>
+        </service>
+
+        <!-- definitionProperty -->
+        <service id="definitionProperty" class="%chat.class%">
+            <property name="name" type="string">property</property>
+            <property name="logger" type="service" id="logger"></property>
+            <tag name="chat"></tag>
+        </service>
+
+        <!-- chat.configurator -->
+        <service id="chat.configurator" class="Configurator\Chat">
+            <argument type="service" id="logger"></argument>
+        </service>
+        
+        <!-- definitionConfigurator -->
+        <service id="definitionConfigurator" class="%chat.class%">
+            <property name="name" type="string">configurator</property>
+            <configurator service="chat.configurator" method="configure"></configurator>
+            <tag name="chat"></tag>
+        </service>
+
+        <!-- definitionFactory -->
+        <service id="definitionFactory" class="%chat.class%">
+            <property name="name" type="string">factory</property>
+            <factory class="Factory\Chat" method="factory"></factory>
+            <argument type="service" id="logger"></argument>
+            <tag name="chat"></tag>
+        </service>
+    </services>
+</container>

@@ -1,11 +1,52 @@
+parameters:
+    logger.class: Service\logger
+    chat.class: Service\Chat
 services:
     logger:
-        class: service\logger
+        class: %logger.class%
 
-    definitionContructor:
-        class: service\Chat
+    definitionConstructor:
+        class: %chat.class%
         arguments: [@logger]
         properties:
             name: constructor
+        tags:
+            - { name: chat }
+
+    definitionSetter:
+        class: %chat.class%
+        calls:
+            - [setLogger, [@logger]]
+        properties:
+            name: setter
+        tags:
+            - { name: chat }
+
+    definitionProperty:
+        class: %chat.class%
+        properties:
+            name: property
+            logger: @logger
+        tags:
+            - { name: chat }
+
+    chat.configurator:
+        class: Configurator\Chat
+        arguments: [@logger]
+
+    definitionConfigurator:
+        class: %chat.class%
+        properties:
+            name: configurator
+        configurator: ["@chat.configurator", configure]
+        tags:
+            - { name: chat }
+
+    definitionFactory:
+        class: %chat.class%
+        arguments: [@logger]
+        properties:
+            name: factory
+        factory: "Factory\Chat::factory"
         tags:
             - { name: chat }

@@ -35,8 +35,10 @@ class ProjectServiceContainer extends Container
     protected function getDefaultParameters()
     {
         return array(
-            'logger.class' => 'service\\logger',
-            'chat.class' => 'service\\Chat',
+            'logger.class' => 'Service\\logger',
+            'chat.class' => 'Service\\Chat',
+            0 => 'Service\\logger',
+            1 => 'Service\\Chat',
         );
     }
 }

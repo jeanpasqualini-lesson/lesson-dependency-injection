@@ -14,7 +14,7 @@ use Psr\Log\LoggerInterface;
 class Chat {
     public function factory(LoggerInterface $logger)
     {
-        $chat = new \service\Chat($logger);
+        $chat = new \Service\Chat($logger);
 
         return $chat;
     }

@@ -19,7 +19,7 @@ class Chat {
         $this->logger = $logger;
     }
 
-    public function configure(\service\Chat $chat)
+    public function configure(\Service\Chat $chat)
     {
         $chat->setLogger($this->logger);
     }

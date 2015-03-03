@@ -16,8 +16,8 @@ class PhpContainer extends \Model\Test {
     {
         $container = $this->getContainer();
 
-        $container->setParameter("logger.class", 'service\logger');
-        $container->setParameter("chat.class", 'service\Chat');
+        $container->setParameter("logger.class", 'Service\logger');
+        $container->setParameter("chat.class", 'Service\Chat');
 
         $container
             ->register("logger", '%logger.class%')
@@ -25,7 +25,7 @@ class PhpContainer extends \Model\Test {
 
         $definitionChat = new \Symfony\Component\DependencyInjection\Definition();
 
-        $definitionChat->setClass('service\Chat'); //Fonctionne aussi
+        $definitionChat->setClass('Service\Chat'); //Fonctionne aussi
 
         $definitionChat->setClass("%chat.class%");
 

@@ -27,12 +27,19 @@ $container = new ContainerBuilder();
 
 $tests = array(
     new \Test\PhpContainer(clone $container),
-    new \Test\YamlContainer(clone $container)
+    new \Test\YamlContainer(clone $container),
+    new \Test\XmlContainer(clone $container)
 );
+
+$validator = \Symfony\Component\Validator\Validation::createValidator();
+
+$logger = new \Service\logger();
 
 foreach($tests as $test)
 {
-    echo "Test ::: ".get_class($test).PHP_EOL;
+    $class = new ReflectionClass($test);
+
+    echo "Test ::: ".$class->getShortName().PHP_EOL;
 
     /** @var \Model\Test $test */
 
@@ -43,11 +50,24 @@ foreach($tests as $test)
     foreach($containerTest->findTaggedServiceIds("chat") as $id => $attributes)
     {
         $containerTest->get($id)->test();
+
+        $dumper = new PhpDumper($containerTest);
     }
+
+    $errors = $validator->validate($containerTest, new \Validator\Container());
+
+    if($errors->count() > 0)
+    {
+        foreach($errors as $error)
+        {
+            $logger->log(\Psr\Log\LogLevel::ERROR, $error->getMessage());
+        }
+    }
+    else
+    {
+        $logger->log(\Psr\Log\LogLevel::INFO, $class->getShortName()." test passed [SUCCESS]");
+    }
+
+    file_put_contents(__DIR__.DIRECTORY_SEPARATOR."Dumped".DIRECTORY_SEPARATOR.$class->getShortName().".php", $dumper->dump());
 }
 
-//$container->compile();
-
-$dumper = new PhpDumper($container);
-
-file_put_contents(__DIR__.DIRECTORY_SEPARATOR."container.php", $dumper->dump());

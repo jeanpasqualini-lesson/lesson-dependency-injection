@@ -6,7 +6,7 @@
  * Time: 11:09
  */
 
-namespace service;
+namespace Service;
 
 use Model\Animal;
 use Psr\Log\LoggerInterface;

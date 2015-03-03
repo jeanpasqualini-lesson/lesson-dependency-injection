@@ -13,6 +13,7 @@
     "symfony/dependency-injection": "2.7.x-dev",
     "symfony/config": "2.7.x-dev",
     "psr/log": "1.0.0",
-    "symfony/yaml": "2.7.x-dev"
+    "symfony/yaml": "2.7.x-dev",
+    "symfony/validator": "2.7.x-dev"
   }
 }
