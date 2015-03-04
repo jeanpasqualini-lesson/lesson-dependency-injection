@@ -8,20 +8,29 @@
 namespace Test;
 
 
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\ExpressionLanguage\Expression;
 
 class PhpContainer extends \Model\Test {
 
     public function runTest()
     {
+        /** @var ContainerBuilder $container */
         $container = $this->getContainer();
 
         $container->setParameter("logger.class", 'Service\logger');
         $container->setParameter("chat.class", 'Service\Chat');
+        $container->setParameter("root", ROOT_DIRECTORY);
 
         $container
-            ->register("logger", '%logger.class%')
+            ->register("logger.file", '%logger.class%')
+            ->setFile("lib/ColorConsole.php")
         ;
+
+        $container->setAlias("logger", "logger.file");
 
         $definitionChat = new \Symfony\Component\DependencyInjection\Definition();
 
@@ -29,12 +38,9 @@ class PhpContainer extends \Model\Test {
 
         $definitionChat->setClass("%chat.class%");
 
-
-        $definitionChat->addTag("chat");
-
         $definitionConstructor = clone $definitionChat;
 
-        $definitionConstructor->setProperty("name", "constructor");
+        $definitionConstructor->addTag("chat", array("alias" => "constructor"));
 
         $definitionConstructor->addArgument(new Reference("logger"));
 
@@ -42,7 +48,7 @@ class PhpContainer extends \Model\Test {
 
         $definitionSetter = clone $definitionChat;
 
-        $definitionSetter->setProperty("name", "setter");
+        $definitionSetter->addTag("chat", array("alias" => "setter"));
 
         $definitionSetter->addMethodCall("setLogger", array(new Reference("logger")));
 
@@ -50,7 +56,7 @@ class PhpContainer extends \Model\Test {
 
         $definitionProperty = clone $definitionChat;
 
-        $definitionProperty->setProperty("name", "property");
+        $definitionProperty->addTag("chat", array("alias" => "property"));
 
         $definitionProperty->setProperty("logger", new Reference("logger"));
 
@@ -58,7 +64,7 @@ class PhpContainer extends \Model\Test {
 
         $definitionConfigurator = clone $definitionChat;
 
-        $definitionConfigurator->setProperty("name", "configurator");
+        $definitionConfigurator->addTag("chat", array("alias" => "configurator"));
 
 // Register configurator with register short
         $container
@@ -75,7 +81,7 @@ class PhpContainer extends \Model\Test {
 
         $definitionFactory = clone $definitionChat;
 
-        $definitionFactory->setProperty("name", "factory");
+        $definitionFactory->addTag("chat", array("alias" => "factory"));
 
         /**
         $definitionFactory->setFactoryClass('Factory\Chat');
@@ -88,5 +94,23 @@ class PhpContainer extends \Model\Test {
         $definitionFactory->addArgument(new Reference("logger"));
 
         $container->setDefinition("definitionFactory", $definitionFactory);
+
+        $definitionExpression = clone $definitionChat;
+
+        $definitionExpression->addTag("chat", array("alias" => "expression"));
+        
+        $definitionExpression->setClass("%chat.class%");
+
+        $definitionExpression->addArgument(new Expression("container.get('logger')"));
+
+        $container->setDefinition("definitionExpression", $definitionExpression);
+
+        $definitionSynthetic = new Definition();
+
+        $definitionSynthetic->setSynthetic(true);
+
+        $definitionSynthetic->addTag("chat", array("alias" => "synthetic"));
+
+        $container->setDefinition("definitionSynthetic", $definitionSynthetic);
     }
 }

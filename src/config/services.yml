@@ -1,9 +1,17 @@
 parameters:
     logger.class: Service\logger
     chat.class: Service\Chat
+    root: ""
+
 services:
-    logger:
+    logger.file:
         class: %logger.class%
+        lazy: true
+        file: lib/ColorConsole.php
+        public: false
+
+    logger:
+        alias: logger.file
 
     definitionConstructor:
         class: %chat.class%
@@ -11,7 +19,7 @@ services:
         properties:
             name: constructor
         tags:
-            - { name: chat }
+            - { name: chat, alias: constructor }
 
     definitionSetter:
         class: %chat.class%
@@ -20,7 +28,7 @@ services:
         properties:
             name: setter
         tags:
-            - { name: chat }
+            - { name: chat, alias: setter }
 
     definitionProperty:
         class: %chat.class%
@@ -28,7 +36,7 @@ services:
             name: property
             logger: @logger
         tags:
-            - { name: chat }
+            - { name: chat, alias: property }
 
     chat.configurator:
         class: Configurator\Chat
@@ -40,7 +48,7 @@ services:
             name: configurator
         configurator: ["@chat.configurator", configure]
         tags:
-            - { name: chat }
+            - { name: chat, alias: configurator }
 
     definitionFactory:
         class: %chat.class%
@@ -49,4 +57,16 @@ services:
             name: factory
         factory: "Factory\Chat::factory"
         tags:
-            - { name: chat }
+            - { name: chat, alias: factory }
+
+    definitionExpression:
+        class: %chat.class%
+        arguments: [@=container.get('logger')]
+        tags:
+            - { name: chat, alias: expression }
+
+    defininitionSynthetic:
+        synthetic: true
+        tags:
+            - { name: chat, alias: synthetic }
+

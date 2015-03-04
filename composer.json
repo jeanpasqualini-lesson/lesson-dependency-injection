@@ -14,6 +14,8 @@
     "symfony/config": "2.7.x-dev",
     "psr/log": "1.0.0",
     "symfony/yaml": "2.7.x-dev",
-    "symfony/validator": "2.7.x-dev"
+    "symfony/validator": "2.7.x-dev",
+    "symfony/proxy-manager-bridge": "2.3.*",
+    "symfony/expression-language": "2.7.x-dev"
   }
 }

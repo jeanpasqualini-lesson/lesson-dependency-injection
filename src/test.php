@@ -23,12 +23,17 @@ spl_autoload_register(function($classname)
 
 $chats = array();
 
-$container = new ContainerBuilder();
+//$container = new ContainerBuilder();
+
+//$container->setProxyInstantiator(new \Symfony\Bridge\ProxyManager\LazyProxy\Instantiator\RuntimeInstantiator());
+
+// Le fait de cloner le container instancier pose un problème avec les parameters qui se retrouve partagé
 
 $tests = array(
-    new \Test\PhpContainer(clone $container),
-    new \Test\YamlContainer(clone $container),
-    new \Test\XmlContainer(clone $container)
+    new \Test\PhpContainer(new ContainerBuilder()),
+    new \Test\YamlContainer(new ContainerBuilder()),
+    new \Test\XmlContainer(new ContainerBuilder()),
+    new \Test\ClosureContainer(new ContainerBuilder())
 );
 
 $validator = \Symfony\Component\Validator\Validation::createValidator();
@@ -47,13 +52,6 @@ foreach($tests as $test)
 
     $containerTest = $test->getContainer();
 
-    foreach($containerTest->findTaggedServiceIds("chat") as $id => $attributes)
-    {
-        $containerTest->get($id)->test();
-
-        $dumper = new PhpDumper($containerTest);
-    }
-
     $errors = $validator->validate($containerTest, new \Validator\Container());
 
     if($errors->count() > 0)
@@ -67,6 +65,27 @@ foreach($tests as $test)
     {
         $logger->log(\Psr\Log\LogLevel::INFO, $class->getShortName()." test passed [SUCCESS]");
     }
+
+    foreach($containerTest->findTaggedServiceIds("chat") as $id => $attributes)
+    {
+        if(count($attributes) == 1 && isset($attributes[0]["alias"]))
+        {
+            if($attributes[0]["alias"] == "synthetic")
+            {
+                $containerTest->set($id, new \Service\Chat($containerTest->get("logger")));
+            }
+
+            $chat = $containerTest->get($id);
+
+            $chat->name = $attributes[0]["alias"];
+
+            $chat->test();
+        }
+    }
+
+    $dumper = new PhpDumper($containerTest);
+
+    $dumper->setProxyDumper(new \Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper());
 
     file_put_contents(__DIR__.DIRECTORY_SEPARATOR."Dumped".DIRECTORY_SEPARATOR.$class->getShortName().".php", $dumper->dump());
 }
