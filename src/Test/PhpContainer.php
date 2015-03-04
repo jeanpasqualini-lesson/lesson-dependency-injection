@@ -112,5 +112,10 @@ class PhpContainer extends \Model\Test {
         $definitionSynthetic->addTag("chat", array("alias" => "synthetic"));
 
         $container->setDefinition("definitionSynthetic", $definitionSynthetic);
+
+        $container->loadFromExtension("testextension", array(
+            "foo" => 1,
+            "bar" => 1
+        ));
     }
 }

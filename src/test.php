@@ -46,11 +46,18 @@ foreach($tests as $test)
 
     echo "Test ::: ".$class->getShortName().PHP_EOL;
 
+    $containerTest = $test->getContainer();
+
+    $testExtension = new \Extension\TestExtension();
+
+    /** @var ContainerBuilder $containerTest */
+    $containerTest->registerExtension($testExtension);
+
     /** @var \Model\Test $test */
 
     $test->runTest();
 
-    $containerTest = $test->getContainer();
+    //$containerTest->loadFromExtension($testExtension->getAlias());
 
     $errors = $validator->validate($containerTest, new \Validator\Container());
 
@@ -82,6 +89,8 @@ foreach($tests as $test)
             $chat->test();
         }
     }
+
+    $containerTest->compile();
 
     $dumper = new PhpDumper($containerTest);
 

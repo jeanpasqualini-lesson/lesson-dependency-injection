@@ -1,3 +1,7 @@
+testextension:
+    foo: 1
+    bar: 2
+
 parameters:
     logger.class: Service\logger
     chat.class: Service\Chat

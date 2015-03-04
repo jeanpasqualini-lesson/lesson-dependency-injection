@@ -7,6 +7,7 @@
         <parameter key="chat.class">Service\Chat</parameter>
         <parameter key="root" type="constant">ROOT_DIRECTORY</parameter>
     </parameters>
+
     <services>
         <service id="logger.file" class="%logger.class%">
             <file>lib/ColorConsole.php</file>

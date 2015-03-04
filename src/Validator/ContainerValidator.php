@@ -381,7 +381,7 @@ class ContainerValidator extends ConstraintValidator {
         {
             $this->validateDefinitionExpression($this->getChat("expression"));
         }
-        
+
         if(!$this->hasChat("synthetic"))
         {
             $this->context->addViolation(self::DEFINITION_SYNTHETIC_INCORECT);
