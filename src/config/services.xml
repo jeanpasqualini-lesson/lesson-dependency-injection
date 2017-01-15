@@ -10,7 +10,7 @@
 
     <services>
         <service id="logger.file" class="%logger.class%">
-            <file>lib/ColorConsole.php</file>
+            <file>%kernel.root_dir%/lib/ColorConsole.php</file>
         </service>
 
         <service alias="logger.file" id="logger">
@@ -20,7 +20,7 @@
         <!-- defintionConstructor -->
         <service id="definitionConstructor" class="%chat.class%">
             <argument type="service" id="logger"/>
-            <tag name="chat" alias="constructor"></tag>
+            <tag name="chat" alias="constructor"/>
             <property name="name" type="string">constructor</property>
         </service>
 
@@ -28,7 +28,7 @@
         <service id="definitionSetter" class="%chat.class%">
             <property name="name" type="string">setter</property>
             <call method="setLogger">
-                <argument type="service" id="logger"></argument>
+                <argument type="service" id="logger"/>
             </call>
             <tag name="chat" alias="setter"></tag>
         </service>
@@ -36,39 +36,39 @@
         <!-- definitionProperty -->
         <service id="definitionProperty" class="%chat.class%">
             <property name="name" type="string">property</property>
-            <property name="logger" type="service" id="logger"></property>
-            <tag name="chat" alias="property"></tag>
+            <property name="logger" type="service" id="logger"/>
+            <tag name="chat" alias="property"/>
         </service>
 
         <!-- chat.configurator -->
         <service id="chat.configurator" class="Configurator\Chat">
-            <argument type="service" id="logger"></argument>
+            <argument type="service" id="logger"/>
         </service>
         
         <!-- definitionConfigurator -->
         <service id="definitionConfigurator" class="%chat.class%">
             <property name="name" type="string">configurator</property>
-            <configurator service="chat.configurator" method="configure"></configurator>
-            <tag name="chat" alias="configurator"></tag>
+            <configurator service="chat.configurator" method="configure"/>
+            <tag name="chat" alias="configurator"/>
         </service>
 
         <!-- definitionFactory -->
         <service id="definitionFactory" class="%chat.class%">
             <property name="name" type="string">factory</property>
-            <factory class="Factory\Chat" method="factory"></factory>
-            <argument type="service" id="logger"></argument>
-            <tag name="chat" alias="factory"></tag>
+            <factory class="Factory\Chat" method="factory"/>
+            <argument type="service" id="logger"/>
+            <tag name="chat" alias="factory"/>
         </service>
 
         <!-- definitionExpression -->
         <service id="definitionExpression" class="%chat.class%">
             <argument type="expression">container.get('logger')</argument>
-            <tag name="chat" alias="expression"></tag>
+            <tag name="chat" alias="expression"/>
         </service>
 
         <!-- definitionSynthetic -->
         <service id="definitionSynthetic" synthetic="true">
-            <tag name="chat" alias="synthetic"></tag>
+            <tag name="chat" alias="synthetic"/>
         </service>
     </services>
 </container>

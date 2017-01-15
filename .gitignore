@@ -4,3 +4,7 @@ composer.phar
 vendor/
 src/container.php
 Dumped/
+PhpContainer.php
+YamlContainer.php
+XmlContainer.php
+CLosureContainer.php

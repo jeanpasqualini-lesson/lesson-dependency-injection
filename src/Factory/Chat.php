@@ -12,7 +12,7 @@ namespace Factory;
 use Psr\Log\LoggerInterface;
 
 class Chat {
-    public function factory(LoggerInterface $logger)
+    public static function factory(LoggerInterface $logger)
     {
         $chat = new \Service\Chat($logger);
 

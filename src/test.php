@@ -5,7 +5,7 @@
  * Date: 25/02/15
  * Time: 10:30
  */
-require "../vendor/autoload.php";
+require __DIR__."/../vendor/autoload.php";
 
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -47,6 +47,7 @@ foreach($tests as $test)
     echo "Test ::: ".$class->getShortName().PHP_EOL;
 
     $containerTest = $test->getContainer();
+    $containerTest->setParameter('kernel.root_dir', __DIR__);
 
     $testExtension = new \Extension\TestExtension();
 
@@ -96,6 +97,6 @@ foreach($tests as $test)
 
     $dumper->setProxyDumper(new \Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper());
 
-    file_put_contents(__DIR__.DIRECTORY_SEPARATOR."Dumped".DIRECTORY_SEPARATOR.$class->getShortName().".php", $dumper->dump());
+    file_put_contents(__DIR__.'/../'.$class->getShortName().".php", $dumper->dump());
 }
 

@@ -10,12 +10,15 @@
     }
   ],
   "require": {
-    "symfony/dependency-injection": "2.7.x-dev",
-    "symfony/config": "2.7.x-dev",
+    "symfony/dependency-injection": "3.0.*",
+    "symfony/config": "3.0.*",
     "psr/log": "1.0.0",
-    "symfony/yaml": "2.7.x-dev",
-    "symfony/validator": "2.7.x-dev",
-    "symfony/proxy-manager-bridge": "2.3.*",
-    "symfony/expression-language": "2.7.x-dev"
+    "symfony/yaml": "3.0.*",
+    "symfony/validator": "3.0.*",
+    "symfony/expression-language": "3.0.*",
+    "symfony/proxy-manager-bridge": "3.0.*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.7"
   }
 }

@@ -243,7 +243,7 @@ class ContainerValidator extends ConstraintValidator {
         {
             $this->context->addViolation($violation." : no class %logger.class% setted");
         }
-        elseif($file != "lib/ColorConsole.php")
+        elseif($file != "%kernel.root_dir%/lib/ColorConsole.php")
         {
             $this->context->addViolation($violation." : no file 'lib/ColorConsole.php' attached");
         }

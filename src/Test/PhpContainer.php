@@ -27,7 +27,7 @@ class PhpContainer extends \Model\Test {
 
         $container
             ->register("logger.file", '%logger.class%')
-            ->setFile("lib/ColorConsole.php")
+            ->setFile('%kernel.root_dir%/lib/ColorConsole.php')
         ;
 
         $container->setAlias("logger", "logger.file");
