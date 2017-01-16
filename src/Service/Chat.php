@@ -30,7 +30,7 @@ class Chat implements Animal {
 
     public function test()
     {
-        if($this->logger === null) throw new \Exception("logger is not setted");
+        if ($this->logger === null) throw new \Exception("logger is not setted");
 
         $this->logger->log(LogLevel::DEBUG, "Le chat $this->name fonctionne");
     }

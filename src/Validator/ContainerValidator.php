@@ -41,17 +41,19 @@ class ContainerValidator extends ConstraintValidator {
 
     private $chats;
 
+    /**
+     * @param string $violation
+     */
     private function validateAllDefinition(Definition $definition, $violation)
     {
-        if(!$definition->hasTag("chat"))
+        if (!$definition->hasTag("chat"))
         {
             $this->context->addViolation($violation." : no tag chat");
-        }
-        else
+        } else
         {
                 $class = $definition->getClass();
 
-                if($class != "%chat.class%")
+                if ($class != "%chat.class%")
                 {
                     $this->context->addViolation($violation." : class is no %chat.class% ");
                 }
@@ -60,20 +62,24 @@ class ContainerValidator extends ConstraintValidator {
 
     private function testReference($value, $equalTo)
     {
-        if(!is_object($value)) return false;
-        if(!$value instanceof Reference) return false;
-        if(!((string) $value) != $equalTo) return false;
+        if (!is_object($value)) return false;
+        if (!$value instanceof Reference) return false;
+        if (!((string) $value) != $equalTo) return false;
 
         return true;
     }
 
+    /**
+     * @param string $propertieName
+     * @param string $referenceName
+     */
     private function definitionHasPropertieReference(Definition $definition, $propertieName, $referenceName)
     {
         $properties = $definition->getProperties();
 
-        foreach($properties as $key => $propertie)
+        foreach ($properties as $key => $propertie)
         {
-            if($key == $propertieName && $propertie instanceof Reference && ((string) $propertie) == $referenceName)
+            if ($key == $propertieName && $propertie instanceof Reference && ((string) $propertie) == $referenceName)
             {
                 return true;
             }
@@ -86,9 +92,9 @@ class ContainerValidator extends ConstraintValidator {
     {
         $properties = $definition->getProperties();
 
-        foreach($properties as $key => $propertie)
+        foreach ($properties as $key => $propertie)
         {
-            if($key == $propertieName && $propertie == $propertieValue)
+            if ($key == $propertieName && $propertie == $propertieValue)
             {
                 return true;
             }
@@ -97,13 +103,16 @@ class ContainerValidator extends ConstraintValidator {
         return false;
     }
 
+    /**
+     * @param string $method
+     */
     private function definitionHasCall(Definition $definition, $method)
     {
         $calls = $definition->getMethodCalls();
 
-        foreach($calls as $call)
+        foreach ($calls as $call)
         {
-            if($call[0] == $method)
+            if ($call[0] == $method)
             {
                 return true;
             }
@@ -119,7 +128,7 @@ class ContainerValidator extends ConstraintValidator {
 
         $properties = $definition->getProperties();
 
-        if(count($arguments) < 1)
+        if (count($arguments) < 1)
         {
             $this->context->addViolation($violation);
         }
@@ -129,7 +138,7 @@ class ContainerValidator extends ConstraintValidator {
 
     private function validateDefinitionSynthetic(Definition $definition, $violation = self::DEFINITION_SYNTHETIC_INCORECT)
     {
-        if(!$definition->isSynthetic())
+        if (!$definition->isSynthetic())
         {
             $this->context->addViolation($violation);
         }
@@ -141,15 +150,14 @@ class ContainerValidator extends ConstraintValidator {
 
         $properties = $definition->getProperties();
 
-        $calls  = $definition->getMethodCalls();
+        $calls = $definition->getMethodCalls();
 
-        if(count($calls) < 1)
+        if (count($calls) < 1)
         {
             $this->context->addViolation($violation." : no called setLogger");
-        }
-        else
+        } else
         {
-            if(!$this->definitionHasCall($definition, "setLogger"))
+            if (!$this->definitionHasCall($definition, "setLogger"))
             {
                 $this->context->addViolation($violation." : no called setLogger");
             }
@@ -164,12 +172,12 @@ class ContainerValidator extends ConstraintValidator {
 
         $properties = $definition->getProperties();
 
-        if(count($properties) < 1)
+        if (count($properties) < 1)
         {
             $this->context->addViolation($violation." : no setted propertie logger or name");
         }
 
-        if(!$this->definitionHasPropertieReference($definition, "logger", "logger"))
+        if (!$this->definitionHasPropertieReference($definition, "logger", "logger"))
         {
             $this->context->addViolation($violation." : no setted propertie logger");
         }
@@ -185,7 +193,7 @@ class ContainerValidator extends ConstraintValidator {
 
         $configurator = $definition->getConfigurator();
 
-        if(
+        if (
             $configurator === null
             ||
             !is_array($configurator)
@@ -204,7 +212,7 @@ class ContainerValidator extends ConstraintValidator {
             $this->context->addViolation($violation);
         }
 
-        $this->validateAllDefinition($definition, $violation. " : no configurator chat.configuration attached");
+        $this->validateAllDefinition($definition, $violation." : no configurator chat.configuration attached");
     }
 
     private function validateDefinitionFactory(Definition $definition, $violation = self::DEFINITION_FACTORY_INCORECT)
@@ -215,9 +223,9 @@ class ContainerValidator extends ConstraintValidator {
 
         $factory = $definition->getFactory();
 
-        if($factory === null) $factory = array($definition->getFactoryClass(), $definition->getFactoryMethod());
+        if ($factory === null) $factory = array($definition->getFactoryClass(), $definition->getFactoryMethod());
 
-        if($factory === null || $factory !== array("Factory\\Chat", "factory"))
+        if ($factory === null || $factory !== array("Factory\\Chat", "factory"))
         {
             $this->context->addViolation($violation);
         }
@@ -227,7 +235,7 @@ class ContainerValidator extends ConstraintValidator {
 
     private function validateAliasLogger(Alias $alias, $violation = self::DEFINITION_LOGGER_INCORRECT)
     {
-        if((string) $alias != "logger.file")
+        if ((string) $alias != "logger.file")
         {
             $this->context->addViolation($violation." : no alias setted");
         }
@@ -239,11 +247,11 @@ class ContainerValidator extends ConstraintValidator {
 
         $file = $definition->getFile();
 
-        if($class != "%logger.class%")
+        if ($class != "%logger.class%")
         {
             $this->context->addViolation($violation." : no class %logger.class% setted");
         }
-        elseif($file != "%kernel.root_dir%/lib/ColorConsole.php")
+        elseif ($file != "%kernel.root_dir%/lib/ColorConsole.php")
         {
             $this->context->addViolation($violation." : no file 'lib/ColorConsole.php' attached");
         }
@@ -253,13 +261,12 @@ class ContainerValidator extends ConstraintValidator {
     {
         $arguments = $definition->getArguments();
 
-        if(count($arguments) != 1)
+        if (count($arguments) != 1)
         {
             $this->context->addViolation($violation);
-        }
-        else
+        } else
         {
-            if(!$arguments[0] instanceof Expression || ((string) $arguments[0]) != "container.get('logger')")
+            if (!$arguments[0] instanceof Expression || ((string) $arguments[0]) != "container.get('logger')")
             {
                 $this->context->addViolation($violation);
             }
@@ -271,13 +278,13 @@ class ContainerValidator extends ConstraintValidator {
     private function getAvailablesChats()
     {
         return array(
-          "constructor",
-          "setter",
-          "property",
-          "configurator",
-          "factory",
-          "expression",
-          "synthetic"
+            "constructor",
+            "setter",
+            "property",
+            "configurator",
+            "factory",
+            "expression",
+            "synthetic"
         );
     }
 
@@ -286,9 +293,14 @@ class ContainerValidator extends ConstraintValidator {
         return in_array($name, array_keys($this->chats));
     }
 
+    /**
+     * @param string $name
+     *
+     * @return Definition
+     */
     private function getChat($name)
     {
-        if(!$this->hasChat($name))
+        if (!$this->hasChat($name))
         {
             throw new \LogicException("chat $name not defined");
         }
@@ -300,13 +312,13 @@ class ContainerValidator extends ConstraintValidator {
     {
         $chats = array();
 
-        foreach($container->getDefinitions() as $key => $definition)
+        foreach ($container->getDefinitions() as $key => $definition)
         {
-            if($definition->hasTag("chat"))
+            if ($definition->hasTag("chat"))
             {
                 $tag = $definition->getTag("chat");
 
-                if(count($tag) == 1 && isset($tag[0]["alias"]))
+                if (count($tag) == 1 && isset($tag[0]["alias"]))
                 {
                     $chats[$tag[0]["alias"]] = $definition;
                 }
@@ -328,111 +340,102 @@ class ContainerValidator extends ConstraintValidator {
     {
         $this->setChats($value);
 
-        if(!$this->hasChat("constructor"))
+        if (!$this->hasChat("constructor"))
         {
             $this->context->addViolation(self::DEFINITION_CONSTRUCTOR_INCORRECT);
-        }
-        else
+        } else
         {
             $this->validateDefinitionConstructor($this->getChat("constructor"));
         }
 
-        if(!$this->hasChat("setter"))
+        if (!$this->hasChat("setter"))
         {
             $this->context->addViolation(self::DEFINITION_SETTER_INCORECT);
-        }
-        else
+        } else
         {
             $this->validateDefinitionSetter($this->getChat("setter"));
         }
 
-        if(!$this->hasChat("property"))
+        if (!$this->hasChat("property"))
         {
             $this->context->addViolation(self::DEFINITION_PROPERTY_INCORECT);
-        }
-        else
+        } else
         {
             $this->validateDefinitionProperty($this->getChat("property"));
         }
 
-        if(!$this->hasChat("configurator"))
+        if (!$this->hasChat("configurator"))
         {
             $this->context->addViolation(self::DEFINITION_CONFIGURATOR_INCORECT);
-        }
-        else
+        } else
         {
             $this->validateDefinitionConfigurator($this->getChat("configurator"));
         }
 
-        if(!$this->hasChat("factory"))
+        if (!$this->hasChat("factory"))
         {
             $this->context->addViolation(self::DEFINITION_FACTORY_INCORECT);
-        }
-        else
+        } else
         {
             $this->validateDefinitionFactory($this->getChat("factory"));
         }
 
-        if(!$this->hasChat("expression"))
+        if (!$this->hasChat("expression"))
         {
             $this->context->addViolation(self::DEFINITION_EXPRESSION_INCORECT);
-        }
-        else
+        } else
         {
             $this->validateDefinitionExpression($this->getChat("expression"));
         }
 
-        if(!$this->hasChat("synthetic"))
+        if (!$this->hasChat("synthetic"))
         {
             $this->context->addViolation(self::DEFINITION_SYNTHETIC_INCORECT);
-        }
-        else
+        } else
         {
             $this->validateDefinitionSynthetic($this->getChat("synthetic"));
         }
 
-        if(!$value->hasAlias("logger"))
+        if (!$value->hasAlias("logger"))
         {
             $this->context->addViolation(self::DEFINITION_LOGGER_INCORRECT);
-        }
-        else
+        } else
         {
             $this->validateAliasLogger($value->getAlias("logger"));
         }
 
-        if(!$value->hasDefinition("logger.file"))
+        if (!$value->hasDefinition("logger.file"))
         {
             $this->context->addViolation(self::DEFINITION_LOGGERFILE_INCORECT);
-        }
-        else
+        } else
         {
             $this->validateDefinitionLoggerFile($value->getDefinition("logger.file"));
         }
 
-        if(!$value->hasParameter("chat.class"))
+        if (!$value->hasParameter("chat.class"))
         {
-            $this->context->addViolation(self::PARAMETER_INCORECT. " : parameter chat.class not setted with value Service\\Chat");
+            $this->context->addViolation(self::PARAMETER_INCORECT." : parameter chat.class not setted with value Service\\Chat");
         }
-        elseif($value->getParameter("chat.class") != "Service\\Chat")
+        elseif ($value->getParameter("chat.class") != "Service\\Chat")
         {
-            $this->context->addViolation(self::PARAMETER_INCORECT. " : parameter chat.class not setted with value Service\\Chat");
-        }
-
-
-        if(!$value->hasParameter("logger.class"))
-        {
-            $this->context->addViolation(self::PARAMETER_INCORECT. " : parameter logger.class not setted with value Service\\logger");
-        }
-        elseif($value->getParameter("logger.class") != "Service\\logger")
-        {
-            $this->context->addViolation(self::PARAMETER_INCORECT. " : parameter logger.class not setted with value Service\\logger");
+            $this->context->addViolation(self::PARAMETER_INCORECT." : parameter chat.class not setted with value Service\\Chat");
         }
 
-        if(!$value->hasParameter("root"))
+
+        if (!$value->hasParameter("logger.class"))
+        {
+            $this->context->addViolation(self::PARAMETER_INCORECT." : parameter logger.class not setted with value Service\\logger");
+        }
+        elseif ($value->getParameter("logger.class") != "Service\\logger")
+        {
+            $this->context->addViolation(self::PARAMETER_INCORECT." : parameter logger.class not setted with value Service\\logger");
+        }
+
+        if (!$value->hasParameter("root"))
         {
             $this->context->addViolation(self::PARAMETER_INCORECT." : parameter root not setted with ".ROOT_DIRECTORY);
         }
-        elseif($value->getParameter("root") != ROOT_DIRECTORY)
+        elseif ($value->getParameter("root") != ROOT_DIRECTORY)
         {
             $this->context->addViolation(self::PARAMETER_INCORECT." : parameter root not setted with ".ROOT_DIRECTORY);
         }
