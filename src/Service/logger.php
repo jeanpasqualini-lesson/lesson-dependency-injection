@@ -24,7 +24,7 @@ class logger extends AbstractLogger {
 
     private function getColorFromLevel($level)
     {
-        switch($level)
+        switch ($level)
         {
             case LogLevel::ERROR:
                 return "red";

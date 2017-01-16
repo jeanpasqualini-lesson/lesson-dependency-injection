@@ -14,11 +14,11 @@ define("ROOT_DIRECTORY", __DIR__);
 
 spl_autoload_register(function($classname)
 {
-   $path = __DIR__.DIRECTORY_SEPARATOR.str_replace("\\", DIRECTORY_SEPARATOR, $classname).".php";
+    $path = __DIR__.DIRECTORY_SEPARATOR.str_replace("\\", DIRECTORY_SEPARATOR, $classname).".php";
 
-   if(!file_exists($path)) throw new Exception("class $classname not exist in $path");
+    if(!file_exists($path)) throw new Exception("class $classname not exist in $path");
 
-   require_once($path);
+    require_once($path);
 });
 
 $chats = array();
@@ -40,7 +40,7 @@ $validator = \Symfony\Component\Validator\Validation::createValidator();
 
 $logger = new \Service\logger();
 
-foreach($tests as $test)
+foreach ($tests as $test)
 {
     $class = new ReflectionClass($test);
 
@@ -62,23 +62,22 @@ foreach($tests as $test)
 
     $errors = $validator->validate($containerTest, new \Validator\Container());
 
-    if($errors->count() > 0)
+    if ($errors->count() > 0)
     {
-        foreach($errors as $error)
+        foreach ($errors as $error)
         {
             $logger->log(\Psr\Log\LogLevel::ERROR, $error->getMessage());
         }
-    }
-    else
+    } else
     {
         $logger->log(\Psr\Log\LogLevel::INFO, $class->getShortName()." test passed [SUCCESS]");
     }
 
-    foreach($containerTest->findTaggedServiceIds("chat") as $id => $attributes)
+    foreach ($containerTest->findTaggedServiceIds("chat") as $id => $attributes)
     {
-        if(count($attributes) == 1 && isset($attributes[0]["alias"]))
+        if (count($attributes) == 1 && isset($attributes[0]["alias"]))
         {
-            if($attributes[0]["alias"] == "synthetic")
+            if ($attributes[0]["alias"] == "synthetic")
             {
                 $containerTest->set($id, new \Service\Chat($containerTest->get("logger")));
             }
