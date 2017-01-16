@@ -9,6 +9,11 @@
       "email": "email@example.com"
     }
   ],
+  "autoload" : {
+     "psr-4" : {
+       "tests\\" : "tests/"
+     }
+  },
   "require": {
     "symfony/dependency-injection": "3.0.*",
     "symfony/config": "3.0.*",
